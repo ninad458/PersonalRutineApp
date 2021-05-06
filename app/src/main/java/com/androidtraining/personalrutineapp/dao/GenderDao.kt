@@ -1,6 +1,6 @@
 package com.androidtraining.personalrutineapp.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.androidtraining.personalrutineapp.entity.Gender
 
 @Dao

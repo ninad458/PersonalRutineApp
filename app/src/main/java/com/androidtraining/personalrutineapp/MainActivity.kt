@@ -1,47 +1,80 @@
 package com.androidtraining.personalrutineapp
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.androidtraining.personalrutineapp.dao.GenderDao
+import androidx.appcompat.app.AppCompatActivity
 import com.androidtraining.personalrutineapp.dataBase.AppDatabase
+import com.androidtraining.personalrutineapp.entity.Exercise
 import com.androidtraining.personalrutineapp.entity.Gender
+import com.androidtraining.personalrutineapp.entity.Routine
+import com.androidtraining.personalrutineapp.entity.Trainee
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.tv_message
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var db: AppDatabase? = null
-    private var genderDao: GenderDao? = null
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        db = AppDatabase.getAppDataBase(context = this)
+        disposable.add(Observable.fromCallable {
+            val db = AppDatabase.getAppDataBase(context = this)
+            val genderDao = db.genderDao()
+            val routineDao = db.routineDao()
+            val traineeDao = db.traineeDao()
+            val exerciseDao = db.exerciseDao()
 
-        Observable.fromCallable({
-            db = AppDatabase.getAppDataBase(context = this)
-            genderDao = db?.genderDao()
+            val gender1 = Gender(1, name = "Male")
+            val gender2 = Gender(2, name = "Female")
 
-            var gender1 = Gender(name = "Male")
-            var gender2 = Gender(name = "Female")
-
-            with(genderDao){
-                this?.insertGender(gender1)
-                this?.insertGender(gender2)
+            with(genderDao) {
+                insertGender(gender1)
+                insertGender(gender2)
             }
-            db?.genderDao()?.getGenders()
-        }).doOnNext({ list ->
-            var finalString = ""
-            list?.map { finalString+= it.name+" - " }
-            tv_message.text = finalString
 
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+            val exercise = Exercise(
+                name = "Pull down lats",
+                repetitions = 3,
+                machineName = "Jerrai",
+                liftedWeight = 70
+            )
 
+            val savedRoutineId = exerciseDao.insertDayRoutine(exercise)
 
+            val routine = Routine(
+                dueDay = Date(),
+                exercises = listOf(exercise.copy(exerciseId = savedRoutineId.toInt()))
+            )
+
+            val addedRoutineId = routineDao.insertRoutine(routine)
+
+            traineeDao.insertTrainee(
+                Trainee(
+                    "Rocky",
+                    32,
+                    gender1.id,
+                    routine.copy(routineId = addedRoutineId.toInt())
+                )
+            )
+
+            return@fromCallable traineeDao.getAll()
+        }.map { list -> list.joinToString("\n") { it.toString() } }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(tv_message::setText)
+        )
+    }
+
+    override fun onDestroy() {
+        disposable.clear()
+        super.onDestroy()
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }

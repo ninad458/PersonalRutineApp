@@ -1,9 +1,9 @@
 package com.androidtraining.personalrutineapp.dataBase
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import android.content.Context
 import com.androidtraining.personalrutineapp.converter.DateTypeConverter
 import com.androidtraining.personalrutineapp.converter.ListConverter
@@ -13,7 +13,13 @@ import com.androidtraining.personalrutineapp.entity.Gender
 import com.androidtraining.personalrutineapp.entity.Routine
 import com.androidtraining.personalrutineapp.entity.Trainee
 
-@Database(entities = [Exercise::class, Gender::class, Routine::class, Trainee::class], version = 1)
+@Database(entities = [
+    Exercise::class,
+    Gender::class,
+    Routine::class,
+    Trainee::class
+                     ],
+    version = 1, exportSchema = false)
 @TypeConverters(DateTypeConverter::class, ListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
@@ -24,13 +30,13 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         var INSTANCE: AppDatabase? = null
 
-        fun getAppDataBase(context: Context): AppDatabase? {
+        fun getAppDataBase(context: Context): AppDatabase {
             if (INSTANCE == null){
                 synchronized(AppDatabase::class){
                     INSTANCE = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "myDB").build()
                 }
             }
-            return INSTANCE
+            return INSTANCE!!
         }
 
         fun destroyDataBase(){

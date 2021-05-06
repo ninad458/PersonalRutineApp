@@ -1,13 +1,13 @@
 package com.androidtraining.personalrutineapp.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.androidtraining.personalrutineapp.entity.Routine
 import java.util.*
 
 @Dao
 interface RoutineDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRoutine(routine: Routine)
+    fun insertRoutine(routine: Routine): Long
 
     @Update
     fun updateRoutine(routine: Routine)
@@ -17,4 +17,8 @@ interface RoutineDao{
 
     @Query("SELECT * FROM traineeRoutine WHERE due_Day >= :due")
     fun getRoutineByDueDate(due: Date): List<Routine>
+
+    @Query("SELECT * FROM traineeRoutine")
+    fun getAllRoutines(): List<Routine>
+
 }

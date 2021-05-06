@@ -1,6 +1,6 @@
 package com.androidtraining.personalrutineapp.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.androidtraining.personalrutineapp.entity.Trainee
 
 @Dao
@@ -16,4 +16,7 @@ interface TraineeDao{
 
     @Query("SELECT * FROM Trainee WHERE name = :nameToFind")
     fun getUserByName(nameToFind: String): List<Trainee>
+
+    @Query("SELECT * FROM Trainee")
+    fun getAll(): List<Trainee>
 }

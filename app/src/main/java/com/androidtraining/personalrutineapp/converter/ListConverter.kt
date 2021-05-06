@@ -1,6 +1,7 @@
 package com.androidtraining.personalrutineapp.converter
 
-import android.arch.persistence.room.TypeConverter
+import android.util.Log
+import androidx.room.TypeConverter
 import com.androidtraining.personalrutineapp.entity.Exercise
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -8,7 +9,7 @@ import java.util.*
 
 class ListConverter {
 
-    var gson = Gson()
+    private val gson = Gson()
 
     @TypeConverter
     fun fromTimestamp(data: String?): List<Exercise>? {
@@ -16,7 +17,7 @@ class ListConverter {
         if (data == null){
             return Collections.emptyList()
         }
-        val listType = object : TypeToken<ArrayList<String>>() {}.type
+        val listType = object : TypeToken<ArrayList<Exercise>>() {}.type
         return gson.fromJson(data, listType)
 
 
