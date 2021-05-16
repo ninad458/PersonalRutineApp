@@ -19,7 +19,7 @@ import com.androidtraining.personalrutineapp.entity.Trainee
 @Database(
     entities = [Exercise::class, Gender::class, Routine::class, Trainee::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(DateTypeConverter::class, ListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
