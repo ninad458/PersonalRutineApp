@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.androidtraining.personalrutineapp.converter.Converters
 import com.androidtraining.personalrutineapp.converter.DateTypeConverter
 import com.androidtraining.personalrutineapp.converter.ListConverter
 import com.androidtraining.personalrutineapp.dao.ExerciseDao
-import com.androidtraining.personalrutineapp.dao.GenderDao
 import com.androidtraining.personalrutineapp.dao.RoutineDao
 import com.androidtraining.personalrutineapp.dao.TraineeDao
 import com.androidtraining.personalrutineapp.entity.Exercise
@@ -17,14 +17,13 @@ import com.androidtraining.personalrutineapp.entity.Routine
 import com.androidtraining.personalrutineapp.entity.Trainee
 
 @Database(
-    entities = [Exercise::class, Gender::class, Routine::class, Trainee::class],
+    entities = [Exercise::class, Routine::class, Trainee::class],
     version = 1,
     exportSchema = true
 )
-@TypeConverters(DateTypeConverter::class, ListConverter::class)
+@TypeConverters(DateTypeConverter::class, ListConverter::class, Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
-    abstract fun genderDao(): GenderDao
     abstract fun routineDao(): RoutineDao
     abstract fun traineeDao(): TraineeDao
 

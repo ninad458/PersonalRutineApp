@@ -26,18 +26,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         disposable.add(Observable.fromCallable {
             val db = AppDatabase.getAppDataBase(context = this)
-            val genderDao = db.genderDao()
             val routineDao = db.routineDao()
             val traineeDao = db.traineeDao()
             val exerciseDao = db.exerciseDao()
-
-            val gender1 = Gender(1, name = "Male")
-            val gender2 = Gender(2, name = "Female")
-
-            with(genderDao) {
-                insertGender(gender1)
-                insertGender(gender2)
-            }
 
             val exercise = Exercise(
                 name = "Pull down lats",
@@ -59,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 Trainee(
                     "Rocky",
                     32,
-                    gender1.id,
+                    Gender.MALE,
                     routine.copy(routineId = addedRoutineId.toInt())
                 )
             )
