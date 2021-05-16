@@ -3,20 +3,23 @@ package com.androidtraining.personalrutineapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.androidtraining.personalrutineapp.dataBase.AppDatabase
+import com.androidtraining.personalrutineapp.databinding.ActivityMainBinding
 import com.androidtraining.personalrutineapp.entity.Exercise
 import com.androidtraining.personalrutineapp.entity.Gender
 import com.androidtraining.personalrutineapp.entity.Routine
 import com.androidtraining.personalrutineapp.entity.Trainee
+import com.androidtraining.personalrutineapp.util.viewBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val disposable = CompositeDisposable()
+
+    private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         }.map { list -> list.joinToString("\n") { it.toString() } }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(tv_message::setText)
+            .subscribe(binding.tvMessage::setText)
         )
     }
 
