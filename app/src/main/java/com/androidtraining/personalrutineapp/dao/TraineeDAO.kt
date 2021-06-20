@@ -6,7 +6,7 @@ import com.androidtraining.personalrutineapp.entity.Trainee
 @Dao
 interface TraineeDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrainee(trainee: Trainee)
+    fun insertTrainee(trainee: Trainee):Long
 
     @Update
     fun updateTrainee(trainee: Trainee)

@@ -20,7 +20,7 @@ import com.androidtraining.personalrutineapp.entity.Trainee
 
 @Database(
     entities = [Exercise::class, Routine::class, Trainee::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(DateTypeConverter::class, ListConverter::class, Converters::class)
@@ -40,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         "myDB"
                     ).addMigrations(MIGRATION_1_2)
+                        .fallbackToDestructiveMigration()
                         .build()
                 }
             }

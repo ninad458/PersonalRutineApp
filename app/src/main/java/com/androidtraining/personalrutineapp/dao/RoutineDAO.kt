@@ -15,10 +15,10 @@ interface RoutineDao{
     @Delete
     fun deleteRoutine(routine: Routine)
 
-    @Query("SELECT * FROM traineeRoutine WHERE due_Day >= :due")
+    @Query("SELECT * FROM trainee_routine WHERE due_Day >= :due")
     fun getRoutineByDueDate(due: Date): List<Routine>
 
-    @Query("SELECT * FROM traineeRoutine")
+    @Query("SELECT * FROM trainee_routine")
     fun getAllRoutines(): List<Routine>
 
 }

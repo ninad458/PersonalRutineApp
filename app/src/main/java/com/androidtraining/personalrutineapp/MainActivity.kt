@@ -30,30 +30,30 @@ class MainActivity : AppCompatActivity() {
             val traineeDao = db.traineeDao()
             val exerciseDao = db.exerciseDao()
 
-            val exercise = Exercise(
-                name = "Pull down lats",
-                repetitions = 3,
-                machineName = "Jerrai",
-                liftedWeight = 70
-            )
-
-            val savedRoutineId = exerciseDao.insertDayRoutine(exercise)
 
             val routine = Routine(
                 dueDay = Date(),
-                exercises = listOf(exercise.copy(exerciseId = savedRoutineId.toInt()))
+//                exercises = listOf(exercise.copy(exerciseId = savedRoutineId.toInt())).map { it.exerciseId }
             )
 
             val addedRoutineId = routineDao.insertRoutine(routine)
 
+            val exercise = Exercise(
+                name = "Pull down lats",
+                repetitions = 3,
+                machineName = "Jerrai",
+                liftedWeight = 70,
+                routineId = addedRoutineId
+            )
             traineeDao.insertTrainee(
                 Trainee(
                     "Rocky",
                     32,
                     Gender.MALE,
-                    routine.copy(routineId = addedRoutineId.toInt())
+                    routine.copy(routineId = addedRoutineId)
                 )
             )
+            val savedRoutineId = exerciseDao.insertDayRoutine(exercise)
 
             return@fromCallable traineeDao.getAll()
         }.map { list -> list.joinToString("\n") { it.toString() } }
